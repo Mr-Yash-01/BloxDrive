@@ -22,7 +22,6 @@ import { fetchSharedData } from '../backend/fetchSharedData';
 import { createFolder } from '../backend/createFolder';
 import { getFolderData } from '../backend/getFolderData';
 import contractData from '../Smooth.json';
-import { set } from 'rsuite/esm/internals/utils/date';
 
 export default function Home() {
     const [account, setAccount] = useRecoilState(currentAccountAtom);
