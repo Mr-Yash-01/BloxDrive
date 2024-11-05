@@ -1,7 +1,8 @@
-import { pinataAtom } from "../store/atoms/commonLegends";
-export const uploadFile = async (file) => {
+export const uploadFile = async (pinata, file) => {
     try {
-        const res = await pinataAtom.upload.file(file);
+        const res = await pinata.upload.file(file);
+        console.log(res);
+        
         return res;
     } catch (error) {
         console.error("Error uploading file:", error);

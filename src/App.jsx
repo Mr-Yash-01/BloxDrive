@@ -14,13 +14,11 @@ function App() {
   const fetchSecrets = async () => {
     try {
       const response = await fetch('/.netlify/functions/getSecrets');
-      console.log(response);
       
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log(data); // Log or use your secrets as needed
       setSecrets(data); // Store the secrets in the atom
 
       // Configure Pinata SDK with the fetched JWT token

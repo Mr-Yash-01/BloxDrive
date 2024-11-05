@@ -6,7 +6,7 @@ import { SlCloudUpload } from 'react-icons/sl';
 import { manageUpload } from '../backend/manageUpload';
 import { uploadToBlockchain } from '../backend/uploadingToBlockchain';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { contractAtom, currentAccountAtom, folderDataAtom, pathAtom, selectedFilesAtom, uploadingStatusAtom } from '../store/atoms/commonLegends';
+import { contractAtom, currentAccountAtom, folderDataAtom, pathAtom, pinataAtom, selectedFilesAtom, uploadingStatusAtom } from '../store/atoms/commonLegends';
 import { getFolderData } from '../backend/getFolderData';
 
 const SelectedFilesFixed = () => {
@@ -17,6 +17,7 @@ const SelectedFilesFixed = () => {
     const [selectedFiles, setSelectedFiles] = useRecoilState(selectedFilesAtom);
     const [uploadingStatus, setUploadingStatus] = useRecoilState(uploadingStatusAtom);
     const contractInstance = useRecoilValue(contractAtom);
+    const pinata = useRecoilValue(pinataAtom);
 
     return (
         <div>
@@ -43,7 +44,7 @@ const SelectedFilesFixed = () => {
                 <button onClick={async () => {
 
                     setUploadingStatus(true);
-                    const res = await manageUpload(selectedFiles);
+                    const res = await manageUpload(pinata, selectedFiles);
 
                     if (res.success) {
                         const res2 = await uploadToBlockchain(res.files, contractInstance,path,account);
