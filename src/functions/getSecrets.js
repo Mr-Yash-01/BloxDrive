@@ -1,5 +1,7 @@
 // netlify/getSecrets.js
 export async function handler(event, context) {
+  console.log("data requested");
+  
     const secrets = {
       apiKey: process.env.VITE_API_KEY,
       apiSecret: process.env.VITE_API_SECRET,

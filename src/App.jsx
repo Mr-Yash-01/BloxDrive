@@ -3,35 +3,45 @@ import Home from "./pages/Home";
 import { HiStatusOffline } from "react-icons/hi";
 import { pinataAtom, secretAtom } from "./store/atoms/commonLegends";
 import { useSetRecoilState } from "recoil";
+import { PinataSDK } from "pinata";
 
 function App() {
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Loading state for secrets
   const setSecrets = useSetRecoilState(secretAtom);
   const setPinata = useSetRecoilState(pinataAtom);
 
   const fetchSecrets = async () => {
     try {
       const response = await fetch('/.netlify/functions/getSecrets');
+      console.log(response);
+      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
       console.log(data); // Log or use your secrets as needed
       setSecrets(data); // Store the secrets in the atom
-      setPinata(new PinataSDK({pinataJwt: data.pinataJwt,}))
+
+      // Configure Pinata SDK with the fetched JWT token
+      setPinata(new PinataSDK({
+        pinataJwt: data.pinataJwt,
+      }));
     } catch (error) {
-      setError('Error fetching secrets: ' + error.message);
-      console.error(error);
+      console.error("Error fetching secrets:", error);
+    } finally {
+      setIsLoading(false); // Stop loading once fetch completes (either success or error)
     }
   };
 
-
   useEffect(() => {
-    // Check the initial online status
+    // Check the initial online status and fetch secrets asynchronously
+    const initialize = async () => {
+      setIsOnline(navigator.onLine);
+      await fetchSecrets();
+    };
 
-    fetchSecrets();
-
-    setIsOnline(navigator.onLine);
+    initialize();
 
     // Add event listeners to handle changes in online status
     const handleOnline = () => setIsOnline(true);
@@ -47,6 +57,7 @@ function App() {
     };
   }, []);
 
+  // Show offline message if not online
   if (!isOnline) {
     return (
       <div className="bg-[#1b1b20] flex h-screen w-screen items-center justify-center text-center">
@@ -58,11 +69,19 @@ function App() {
     );
   }
 
-  return (
-    <>
-      <Home />
-    </>
-  );
+  // Show loading message until secrets are fetched
+  if (isLoading) {
+    return (
+      <div className="bg-[#1b1b20] flex h-screen w-screen items-center justify-center text-center">
+        <div className="text-white flex flex-col items-center opacity-60">
+          <h1 className="text-4xl font-bold">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  // Render the Home component once online and secrets are fetched
+  return <Home />;
 }
 
 export default App;

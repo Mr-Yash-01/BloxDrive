@@ -1,28 +1,27 @@
-import { useEffect, useCallback, useState, memo, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { ethers } from 'ethers';
-import contractData from '../Smooth.json';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { contractAtom, currentAccountAtom, currentFragmentAtom, deleteTapedAtom, deletingStatusAtom, folderDataAtom, giveAccessTapedAtom, givingAccessAtom, isCreateFolderTappedAtom, isDroppingAtom, isFolderCreatingAtom, isOptionsTapedAtom, pathAtom, secretAtom, selectedFileManuplationAtom, selectedFilesAtom, sharedDataAtom, showCreateAtom, toAddressAtom, toBeSearchAtom } from '../store/atoms/commonLegends';
 import { IoMdClose } from "react-icons/io";
-import MySpace from './MySpace';
 import { ImFilesEmpty } from "react-icons/im";
-import { MdUploadFile } from "react-icons/md";
-import { MdOutlineCreateNewFolder } from "react-icons/md";
+import { MdUploadFile, MdOutlineCreateNewFolder } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
-import { fetchSharedData } from '../backend/fetchSharedData';
+import { FaSearch } from 'react-icons/fa';
+import MySpace from './MySpace';
 import SharedWithMe from './SharedWithMe';
 import SharedToPeople from './SharedToPeople';
 import Fragments from '../components/Fragments';
 import FileDetailsFloting from '../components/FileDetailsFloting';
 import DeleteAlert from '../components/DeleteAlert';
-import { createFolder } from '../backend/createFolder';
-import { getFolderData } from '../backend/getFolderData';
-import { FaSearch } from 'react-icons/fa';
 import NewFolderNameInputFloting from '../components/NewFolderNameInputFloting';
-import SelectedFilesFloting from '../components/selectedFilesFloting';
+import SelectedFilesFloting from '../components/SelectedFilesFloting';
 import SelectedFilesFixed from '../components/SelectedFilesFixed';
 import SelectedFilesManuplationFixed from '../components/SelectedFilesManuplationFixed';
 import DropFilesHere from '../components/DropFilesHere';
+import { fetchSharedData } from '../backend/fetchSharedData';
+import { createFolder } from '../backend/createFolder';
+import { getFolderData } from '../backend/getFolderData';
+import contractData from '../Smooth.json';
 
 export default function Home() {
     const [account, setAccount] = useRecoilState(currentAccountAtom);
