@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { ethers } from 'ethers';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { contractAtom, currentAccountAtom, currentFragmentAtom, deleteTapedAtom, deletingStatusAtom, folderDataAtom, giveAccessTapedAtom, givingAccessAtom, isCreateFolderTappedAtom, isDroppingAtom, isFolderCreatingAtom, isOptionsTapedAtom, pathAtom, secretAtom, selectedFileManuplationAtom, selectedFilesAtom, sharedDataAtom, showCreateAtom, toAddressAtom, toBeSearchAtom } from '../store/atoms/commonLegends';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { contractAtom, currentAccountAtom, currentFragmentAtom, deleteTapedAtom, deletingStatusAtom, folderDataAtom, giveAccessTapedAtom, givingAccessAtom, isCreateFolderTappedAtom, isDroppingAtom, isFolderCreatingAtom, isOptionsTapedAtom, mainLoadingAtom, pathAtom, secretAtom, selectedFileManuplationAtom, selectedFilesAtom, sharedDataAtom, showCreateAtom, toAddressAtom, toBeSearchAtom } from '../store/atoms/commonLegends';
 import { IoMdClose } from "react-icons/io";
 import { ImFilesEmpty } from "react-icons/im";
 import { MdUploadFile, MdOutlineCreateNewFolder } from "react-icons/md";
@@ -22,6 +22,7 @@ import { fetchSharedData } from '../backend/fetchSharedData';
 import { createFolder } from '../backend/createFolder';
 import { getFolderData } from '../backend/getFolderData';
 import contractData from '../Smooth.json';
+import { set } from 'rsuite/esm/internals/utils/date';
 
 export default function Home() {
     const [account, setAccount] = useRecoilState(currentAccountAtom);
@@ -49,6 +50,7 @@ export default function Home() {
     const [isFolderCreating, setIsFolderCreating] = useRecoilState(isFolderCreatingAtom);
     const [isCreateFolderTapped, setIsCreateFolderTapped] = useRecoilState(isCreateFolderTappedAtom);
     const secret = useRecoilValue(secretAtom);
+    const setMainLoading = useSetRecoilState(mainLoadingAtom);
 
     useEffect(() => {
         const getSharedData = async () => {
@@ -89,6 +91,8 @@ export default function Home() {
             }
         } else {
             alert('Ethereum object not found, please install Metamask');
+            setIsConnectingToWallet(false);
+            setMainLoading(false);
         }
     }, [account]);
 

@@ -11,6 +11,11 @@ export const secretAtom = atom({
     default: null,
 })
 
+export const mainLoadingAtom = atom({
+    key: "mainLoadingAtom",
+    default: true,
+})
+
 export const currentAccountAtom = atom({
     key: "currentAccountAtom",
     default: "",

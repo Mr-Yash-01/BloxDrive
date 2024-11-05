@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import { HiStatusOffline } from "react-icons/hi";
-import { pinataAtom, secretAtom } from "./store/atoms/commonLegends";
-import { useSetRecoilState } from "recoil";
+import { mainLoadingAtom, pinataAtom, secretAtom } from "./store/atoms/commonLegends";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { PinataSDK } from "pinata";
 
 function App() {
   const [isOnline, setIsOnline] = useState(true);
-  const [isLoading, setIsLoading] = useState(true); // Loading state for secrets
+  const [isLoading, setIsLoading] = useRecoilState(mainLoadingAtom);
   const setSecrets = useSetRecoilState(secretAtom);
   const setPinata = useSetRecoilState(pinataAtom);
 
