@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { PinataSDK } from "pinata";
 import NoMetaMask from "./pages/NoMetaMask";
 import LoadingPage from "./pages/LoadingPage";
-import OfflinePage from "./pages/offlinePage";
+import OfflinePage from "./pages/OfflinePage";
 
 function App() {
   const [isOnline, setIsOnline] = useState(true);
