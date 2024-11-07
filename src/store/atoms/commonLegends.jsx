@@ -13,7 +13,7 @@ export const secretAtom = atom({
 
 export const mainLoadingAtom = atom({
     key: "mainLoadingAtom",
-    default: true,
+    default: 0,
 })
 
 export const currentAccountAtom = atom({

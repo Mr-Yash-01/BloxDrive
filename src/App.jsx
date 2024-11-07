@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Home from "./pages/Home";
-import { HiStatusOffline } from "react-icons/hi";
 import { mainLoadingAtom, pinataAtom, secretAtom } from "./store/atoms/commonLegends";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { PinataSDK } from "pinata";
+import NoMetaMask from "./pages/NoMetaMask";
+import LoadingPage from "./pages/LoadingPage";
+import { set } from "rsuite/esm/internals/utils/date";
+import OfflinePage from "./pages/offlinePage";
 
 function App() {
   const [isOnline, setIsOnline] = useState(true);
-  const [isLoading, setIsLoading] = useRecoilState(mainLoadingAtom);
+  const [mainLoading, setMainLoading] = useRecoilState(mainLoadingAtom);
   const setSecrets = useSetRecoilState(secretAtom);
   const setPinata = useSetRecoilState(pinataAtom);
 
   const fetchSecrets = async () => {
     try {
       const response = await fetch('/.netlify/functions/getSecrets');
-      
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -24,19 +27,37 @@ function App() {
       // Configure Pinata SDK with the fetched JWT token
       setPinata(new PinataSDK({
         pinataJwt: data.pinataJwt,
-      }));
+      }));      
+      return true;
     } catch (error) {
       console.error("Error fetching secrets:", error);
-    } finally {
-      setIsLoading(false); // Stop loading once fetch completes (either success or error)
-    }
+      setMainLoading(0);
+      return false;
+    } 
   };
+
+  const checkMetaMask = async () => {
+    if (!(typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask)) {
+      setMainLoading(1);
+      return false;
+    }
+    return true;
+  };
+
 
   useEffect(() => {
     // Check the initial online status and fetch secrets asynchronously
     const initialize = async () => {
       setIsOnline(navigator.onLine);
-      await fetchSecrets();
+      const isMetaMask = await checkMetaMask();
+
+      if (isMetaMask) {
+        const isFetched= await fetchSecrets();
+        if (isFetched){
+          setMainLoading(2);
+        }
+      }
+
     };
 
     initialize();
@@ -53,33 +74,31 @@ function App() {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
+
+
   }, []);
 
   // Show offline message if not online
   if (!isOnline) {
-    return (
-      <div className="bg-[#1b1b20] flex h-screen w-screen items-center justify-center text-center">
-        <div className="text-white flex flex-col items-center opacity-60">
-          <HiStatusOffline size={100} />
-          <h1 className="text-8xl font-bold">Offline</h1>
-        </div>
-      </div>
-    );
+
+    return <OfflinePage />;
   }
 
   // Show loading message until secrets are fetched
-  if (isLoading) {
-    return (
-      <div className="bg-[#1b1b20] flex h-screen w-screen items-center justify-center text-center">
-        <div className="text-white flex flex-col items-center opacity-60">
-          <h1 className="text-4xl font-bold">Loading...</h1>
-        </div>
-      </div>
-    );
+  if (mainLoading === 1) {
+
+
+    return <NoMetaMask />;
   }
 
   // Render the Home component once online and secrets are fetched
-  return <Home />;
+  if (mainLoading === 2) {
+
+
+    return <Home />;
+  }
+
+  return <LoadingPage />;
 }
 
 export default App;

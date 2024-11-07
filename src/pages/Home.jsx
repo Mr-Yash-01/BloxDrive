@@ -63,50 +63,79 @@ export default function Home() {
         getSharedData();
     }, [currentFragment]);
 
+    const initializeWalletConnection = async () => {
+        try {
+            const { contractInstance, account } = await connectWallet();
+            if (contractInstance && account) {
+                await checkAndCreateRoot(contractInstance, account);
+            } else {
+                console.error("Failed to initialize wallet connection: contractInstance or account is missing.");
+            }
+        } catch (error) {
+            console.error("Error in initializeWalletConnection:", error);
+        }
+    };
+    
     const connectWallet = useCallback(async () => {
         if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+    
             setFolderData([]);
             setCurrentFragment(1);
             setSelectedFileManuplation({});
             setIsConnectingToWallet(true);
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            const signer = await provider.getSigner();
-            const accounts = await provider.listAccounts();
-            setAccount(accounts[0].address);
-            setIsConnectingToWallet(false);
-            if (accounts[0]) {
-                try {
-                    const tempContract = new ethers.Contract(
-                        secret.contractAddress,
-                        contractData.abi,
-                        signer
-                    );
-                    setContractInstance(tempContract);
-                    return { contractInstance: tempContract, account: accounts[0].address };
-                } catch (error) {
-                    console.error("Error creating contract:", error);
+    
+            try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                const signer = await provider.getSigner();
+                const accounts = await provider.listAccounts();
+    
+                if (!accounts || !accounts[0]) {
+                    console.error("No accounts found after requesting MetaMask access.");
+                    setIsConnectingToWallet(false);
+                    return { contractInstance: null, account: null };
                 }
+    
+                setAccount(accounts[0].address);
+    
+                // if (!secret || !secret.contractAddress || !contractData || !contractData.abi) {
+                //     console.error("Contract address or ABI is missing. Please check your configuration.");
+                //     setIsConnectingToWallet(false);
+                //     return { contractInstance: null, account: null };
+                // }
+                                
+                const tempContract = new ethers.Contract(
+                    secret.contractAddress,
+                    contractData.abi,
+                    signer
+                );
+    
+                setContractInstance(tempContract);
+                setIsConnectingToWallet(false);
+                
+                return { contractInstance: tempContract, account: accounts[0].address };
+            } catch (error) {
+                console.error("Error creating contract or connecting wallet:", error);
+                setIsConnectingToWallet(false);
+                return { contractInstance: null, account: null };
             }
         } else {
-            alert('Ethereum object not found, please install Metamask');
+            console.warn("MetaMask is not installed or not detected.");
             setIsConnectingToWallet(false);
-            setMainLoading(false);
+            setMainLoading(1);
+            return { contractInstance: null, account: null };
         }
-    }, [account]);
+    }, []);
+    
+    
 
     // Function to create the root if it doesn't exist and fetch folder data
     const checkAndCreateRoot = useCallback(async (contractInstance, account) => {
         if (contractInstance && account) {
             try {
                 // Check if user root exists
-                console.log(1);
                 
                 const checkExist = await contractInstance.checkUserRoot(account);
-                console.log(checkExist);
-                
-                // Log the result for debugging
-                console.log('Root check:', checkExist);
     
                 // Assuming checkExist is a boolean or a non-empty value means it exists
                 if (checkExist === false || checkExist === '0x') {
@@ -114,16 +143,13 @@ export default function Home() {
                     const createBase = await contractInstance.initUserRoot(account);
                     const receipt = await createBase.wait();
                     
-                    if (receipt.status === 1) {
-                        console.log('User root created successfully');
-                    } else {
-                        console.error('Transaction failed:', receipt);
-                        // Handle failed transaction, possibly notify the user
-                        return;
-                    }
-                } else {
-                    console.log('User root already exists');
-                }
+                    if (receipt.status !== 1) {
+                        return
+                    } 
+                } 
+                // else {
+                //     console.log('User root already exists');
+                // }
     
                 // Fetch the folder data after root check or creation
                 const data = await getFolderData(contractInstance, path, account);
@@ -138,15 +164,6 @@ export default function Home() {
             // Handle invalid parameters if needed
         }
     }, [getFolderData, path, account]);
-    
-
-
-    const initializeWalletConnection = async () => {
-        const { contractInstance, account } = await connectWallet();
-        if (contractInstance && account) {
-            await checkAndCreateRoot(contractInstance, account);
-        }
-    };
 
     // Initial fetch to connect wallet, check root existence, and fetch folder data
     useEffect(() => {
@@ -156,13 +173,13 @@ export default function Home() {
     // Listen for account changes and reinitialize
     if (typeof window.ethereum !== 'undefined') {
         window.ethereum.on('accountsChanged', async () => {
-            console.log('Account changed');
 
             await connectWallet();
         });
-    } else {
-        console.log('Ethereum provider not found');
-    }
+    } 
+    // else {
+    //     console.log('Ethereum provider not found');
+    // }
 
     const handleButtonClick = () => {
         fileInputRef.current.click(); // Trigger the hidden file input
@@ -170,7 +187,6 @@ export default function Home() {
 
     const handleFileChange = async (event) => {
         const selectedFiles = Array.prototype.slice.call(event.target.files);
-        console.log('Selected files:', selectedFiles);
 
         // Ensure folderData and folderData.files are defined before accessing them
         if (folderData && Array.isArray(folderData.files)) {
@@ -343,7 +359,6 @@ export default function Home() {
                     handleButtonClick();
                 }} className='w-12 h-12 bg-[#105682] text-white p-3 -rotate-90 cursor-pointer' />
                 <MdOutlineCreateNewFolder onClick={() => {
-                    console.log('Create Folder');
                     setIsCreateFolderTapped(true);
                 }
                 } className='w-12 h-12 bg-[#105682] text-white p-3 -rotate-90 cursor-pointer' />
