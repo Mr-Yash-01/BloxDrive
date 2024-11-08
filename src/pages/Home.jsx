@@ -213,7 +213,7 @@ export default function Home() {
     };
 
     return (
-        <div className={`flex flex-col  bg-[#1b1b20] text-[#e3e3e3] h-screen } `}>
+        <div className={`flex flex-col  bg-[#1b1b20] text-[#e3e3e3] h-screen w-full `}>
             {/* Header Section */}
             <div className='flex flex-col justify-between p-4 gap-4 bg-[#1b1b20] sticky top-0 z-10 md:flex-row md:gap-32 lg:justify-between'>
                 <div className='flex flex-row items-center justify-between md:flex-col'>

@@ -57,6 +57,8 @@ function App() {
         }
       }
 
+      setMainLoading(2);
+
     };
 
     initialize();
