@@ -120,10 +120,10 @@ export default function Home() {
                 return { contractInstance: null, account: null };
             }
         } else {
-            console.warn("MetaMask is not installed or not detected.");
-            setIsConnectingToWallet(false);
-            setMainLoading(1);
-            return { contractInstance: null, account: null };
+            // console.warn("MetaMask is not installed or not detected.");
+            // setIsConnectingToWallet(false);
+            // setMainLoading(1);
+            // return { contractInstance: null, account: null };
         }
     }, []);
     

@@ -47,15 +47,15 @@ function App() {
   useEffect(() => {
     // Check the initial online status and fetch secrets asynchronously
     const initialize = async () => {
-      setIsOnline(navigator.onLine);
-      const isMetaMask = await checkMetaMask();
+      // setIsOnline(navigator.onLine);
+      // const isMetaMask = await checkMetaMask();
 
-      if (isMetaMask) {
-        const isFetched= await fetchSecrets();
-        if (isFetched){
-          setMainLoading(2);
-        }
-      }
+      // if (isMetaMask) {
+      //   const isFetched= await fetchSecrets();
+      //   if (isFetched){
+      //     setMainLoading(2);
+      //   }
+      // }
 
       setMainLoading(2);
 
