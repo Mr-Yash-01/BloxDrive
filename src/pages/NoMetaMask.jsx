@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const NoMetaMask = () => {
     return (
@@ -18,4 +18,4 @@ const NoMetaMask = () => {
     );
 }
 
-export default NoMetaMask
+export default NoMetaMask;

@@ -1,29 +1,42 @@
-export async function deleteFile(account, path, fileName, cid, pinata, contractInstance) {  
+export async function deleteFile(account, path, fileName, cid, pinata, contractInstance) {
     try {
-        // Unpin the file using the Pinata SDK
-        console.log(cid);
-        const unpinResult = await pinata.unpin([cid]); // Pass cid as a string, not an array
-        
+        console.log(`Initiating deletion process for file: ${fileName} at path: ${path}`);
+
+        // Step 1: Unpin the file using the Pinata SDK
+        const unpinResult = await pinata.unpin(cid); // Correct usage of `cid` as a string
         console.log('Unpin result:', unpinResult);
 
-        if (unpinResult[0].status === 'OK') {
-            console.log('File Unpinned Successfully');
+        if (unpinResult.status !== 'OK') {
+            console.error('Failed to unpin the file from Pinata.');
+            return false; // Exit early if unpinning fails
+        }
 
-            // Delete the file from the smart contract storage
-            const response = await contractInstance.deleteFile(path, fileName,cid, account);
-            const receipt = await response.wait();
+        console.log('File successfully unpinned from Pinata.');
 
-            console.log('Delete file receipt:', receipt);
+        // Step 2: Interact with the smart contract to delete the file from blockchain storage
+        console.log('Attempting to delete file from blockchain...');
+        const transaction = await contractInstance.deleteFile(path, fileName, cid, account);
 
-            if (receipt.status === 1) {
-                return true;
-            } else {
-                console.log('Error in Deleting File');
-            }
+        // Wait for the transaction receipt
+        const receipt = await transaction.wait();
+        console.log('Transaction receipt:', receipt);
+
+        if (receipt.status === 1) {
+            console.log('File successfully deleted on-chain.');
+            return true;
         } else {
-            console.log('Error in Unpinning File');
+            console.error('Transaction failed. File could not be deleted on-chain.');
+            return false;
         }
     } catch (error) {
-        console.error('Error during file deletion process:', error);
+        // Specific error handling for transaction rejection
+        if (error.code === 4001 || error.message.includes('rejected')) {
+            console.warn('User rejected the transaction.');
+            return false;
+        }
+
+        // General error handling
+        console.error('An unexpected error occurred during file deletion:', error.message || error);
+        return false;
     }
 }

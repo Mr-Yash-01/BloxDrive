@@ -1,15 +1,33 @@
-export async function giveFileAccess(account, toAddress, selectedFileManuplation ,contractInstance) {
+export async function giveFileAccess(account, toAddress, selectedFileManuplation, contractInstance) {
     try {
-        const res = await contractInstance.giveFileAccess(account,toAddress,selectedFileManuplation.name,selectedFileManuplation.cid,selectedFileManuplation.size,selectedFileManuplation.createdAt,selectedFileManuplation.fileType);
+        // Destructure selectedFileManuplation to extract file details
+        const { name, cid, size, createdAt, fileType } = selectedFileManuplation;
+
+        // Call the contract function to give access to the file
+        const res = await contractInstance.giveFileAccess(
+            account,
+            toAddress,
+            name,
+            cid,
+            size,
+            createdAt,
+            fileType
+        );
+
+        // Wait for the transaction to be mined and get the receipt
         const receipt = await res.wait();
 
-        if(receipt.status === 1){
-            return true;
+        // Check if the transaction was successful (status === 1)
+        if (receipt.status === 1) {
+            console.log('File access granted successfully');
+            return true;  // Return true if successful
         } else {
-            console.log('Error in Giving File Access');
+            console.log('Error in giving file access. Receipt status:', receipt.status);
+            return false;  // Return false if the transaction failed
         }
-
     } catch (error) {
-        
+        // Log the error if it occurs
+        console.error('Error during file access operation:', error);
+        return false;  // Return false if an error occurs
     }
 }

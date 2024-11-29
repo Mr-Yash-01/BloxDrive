@@ -17,10 +17,14 @@ function App() {
     try {
       const response = await fetch('/.netlify/functions/getSecrets');
 
+      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
+      console.log("Secrets fetched:", data);
+      
+      
       setSecrets(data); // Store the secrets in the atom
 
       // Configure Pinata SDK with the fetched JWT token
@@ -47,17 +51,17 @@ function App() {
   useEffect(() => {
     // Check the initial online status and fetch secrets asynchronously
     const initialize = async () => {
-      // setIsOnline(navigator.onLine);
-      // const isMetaMask = await checkMetaMask();
+      setIsOnline(navigator.onLine);
+      const isMetaMask = await checkMetaMask();
 
-      // if (isMetaMask) {
-      //   const isFetched= await fetchSecrets();
-      //   if (isFetched){
-      //     setMainLoading(2);
-      //   }
-      // }
+      if (isMetaMask) {
+        const isFetched= await fetchSecrets();
+        if (isFetched){          
+          setMainLoading(2);
+        }
+      }
 
-      setMainLoading(2);
+      // setMainLoading(2);
 
     };
 

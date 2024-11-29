@@ -75,44 +75,44 @@ export default function Home() {
             console.error("Error in initializeWalletConnection:", error);
         }
     };
-    
+
     const connectWallet = useCallback(async () => {
         if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
-    
+
             setFolderData([]);
             setCurrentFragment(1);
             setSelectedFileManuplation({});
             setIsConnectingToWallet(true);
-    
+
             try {
                 const provider = new ethers.BrowserProvider(window.ethereum);
                 await provider.send("eth_requestAccounts", []);
                 const signer = await provider.getSigner();
                 const accounts = await provider.listAccounts();
-    
+
                 if (!accounts || !accounts[0]) {
                     console.error("No accounts found after requesting MetaMask access.");
                     setIsConnectingToWallet(false);
                     return { contractInstance: null, account: null };
                 }
-    
+
                 setAccount(accounts[0].address);
-    
-                // if (!secret || !secret.contractAddress || !contractData || !contractData.abi) {
-                //     console.error("Contract address or ABI is missing. Please check your configuration.");
-                //     setIsConnectingToWallet(false);
-                //     return { contractInstance: null, account: null };
-                // }
-                                
+
+                if (!secret || !secret.contractAddress || !contractData || !contractData.abi) {
+                    console.error("Contract address or ABI is missing. Please check your configuration.");
+                    setIsConnectingToWallet(false);
+                    return { contractInstance: null, account: null };
+                }
+
                 const tempContract = new ethers.Contract(
                     secret.contractAddress,
                     contractData.abi,
                     signer
                 );
-    
+
                 setContractInstance(tempContract);
                 setIsConnectingToWallet(false);
-                
+
                 return { contractInstance: tempContract, account: accounts[0].address };
             } catch (error) {
                 console.error("Error creating contract or connecting wallet:", error);
@@ -120,41 +120,41 @@ export default function Home() {
                 return { contractInstance: null, account: null };
             }
         } else {
-            // console.warn("MetaMask is not installed or not detected.");
-            // setIsConnectingToWallet(false);
-            // setMainLoading(1);
-            // return { contractInstance: null, account: null };
+            console.warn("MetaMask is not installed or not detected.");
+            setIsConnectingToWallet(false);
+            setMainLoading(1);
+            return { contractInstance: null, account: null };
         }
     }, []);
-    
-    
+
+
 
     // Function to create the root if it doesn't exist and fetch folder data
     const checkAndCreateRoot = useCallback(async (contractInstance, account) => {
         if (contractInstance && account) {
             try {
                 // Check if user root exists
-                
+
                 const checkExist = await contractInstance.checkUserRoot(account);
-    
+
                 // Assuming checkExist is a boolean or a non-empty value means it exists
                 if (checkExist === false || checkExist === '0x') {
                     // User root doesn't exist, create it
                     const createBase = await contractInstance.initUserRoot(account);
                     const receipt = await createBase.wait();
-                    
+
                     if (receipt.status !== 1) {
                         return
-                    } 
-                } 
+                    }
+                }
                 // else {
                 //     console.log('User root already exists');
                 // }
-    
+
                 // Fetch the folder data after root check or creation
                 const data = await getFolderData(contractInstance, path, account);
                 setFolderData(data);
-    
+
             } catch (error) {
                 console.error('Error calling contract method:', error);
                 // Additional error handling, possibly notify the user
@@ -176,7 +176,7 @@ export default function Home() {
 
             await connectWallet();
         });
-    } 
+    }
     // else {
     //     console.log('Ethereum provider not found');
     // }
@@ -213,13 +213,13 @@ export default function Home() {
     };
 
     return (
-        <div className={`flex flex-col  bg-[#1b1b20] text-[#e3e3e3] h-screen w-full `}>
+        <div className="flex flex-col bg-[#1b1b20] text-[#e3e3e3] min-w-full max-w-full min-h-full ">
             {/* Header Section */}
             <div className='flex flex-col justify-between p-4 gap-4 bg-[#1b1b20] sticky top-0 z-10 md:flex-row md:gap-32 lg:justify-between'>
                 <div className='flex flex-row items-center justify-between md:flex-col'>
                     <div className='flex flex-row items-center'>
                         <img className='w-10 h-10' src='/icons8-blockchain-100.png' alt='logo' />
-                        <h1 className='text-2xl font-bold'>BlockDrive</h1>
+                        <h1 className='text-2xl font-bold'>BloxDrive</h1>
                     </div>
                     <h1 className='underline'>{account.substring(0, 6)} ... {account.substring(account.length - 4)}</h1>
                 </div>
@@ -228,9 +228,9 @@ export default function Home() {
                     <input
                         className='flex flex-grow bg-transparent border-none focus:outline-none text-[#e3e3e3]'
                         type='text'
-                        placeholder='Search in BlockDrive'
+                        placeholder='Search in BloxDrive'
                         ref={searchRef}
-                        onChange={(e) => {setToBeSearch(e.target.value.trim())}}
+                        onChange={(e) => { setToBeSearch(e.target.value.trim()) }}
                     />
                 </div>
             </div>
@@ -250,7 +250,7 @@ export default function Home() {
                         <div className="hidden lg:block w-full">
                             <hr className="opacity-20 mt-4" />
 
-                            <button className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl  mt-4 w-full ${showCreate ? 'opacity-50' : ''} hover:bg-[#105682]`}
+                            <button className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl  mt-4 w-full`}
                                 onClick={() => setIsCreateFolderTapped(true)} >
                                 <MdOutlineCreateNewFolder className="w-6 h-6" />
                                 <h1 className='text-base'>Create Folder</h1>
@@ -274,36 +274,46 @@ export default function Home() {
 
 
                                     </div>
-                                    {isFolderCreating ?
-                                        <button className={`flex flex-row  justify-self-center w-fit  p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl  mt-4  `} >
-
+                                    {isFolderCreating ? (
+                                        <button
+                                            className={`flex flex-row justify-self-center w-fit p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl mt-4`}
+                                        >
                                             <span className="w-6 h-6 loader" />
-
                                         </button>
-                                        :
+                                    ) : (
+                                        <button
+                                            onClick={async () => {
+                                                setIsFolderCreating(true);
 
-                                        <button onClick={async () => {
+                                                try {
+                                                    console.log("Creating folder...");
+                                                    const res = await createFolder(newFolderName, contractInstance, path, account, folderData);
 
-                                            setIsFolderCreating(true);
-                                            const res = await createFolder(newFolderName, contractInstance, path, account, folderData);
-                                            if (res) {
-                                                setIsFolderCreating(false);
-                                                setIsCreateFolderTapped(false);
-                                                const data = await getFolderData(contractInstance, path, account);
-                                                setFolderData(data);
-                                            }
-
-                                        }} className={`flex flex-row  justify-self-center w-fit  p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl  mt-4 hover:bg-[#13415e] `} >
-
+                                                    if (res) {
+                                                        console.log("Folder created successfully!");
+                                                        const updatedData = await getFolderData(contractInstance, path, account);
+                                                        setFolderData(updatedData);
+                                                        setIsCreateFolderTapped(false);
+                                                    } else {
+                                                        alert("Operation rejected by user.");
+                                                    }
+                                                } catch (error) {
+                                                    console.error("Error during folder creation:", error);
+                                                    alert("An unexpected error occurred.");
+                                                } finally {
+                                                    setIsFolderCreating(false);
+                                                }
+                                            }}
+                                            className={`flex flex-row justify-self-center w-fit p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl mt-4 hover:bg-[#13415e]`}
+                                        >
                                             <IoMdAdd className="w-6 h-6" />
-
                                         </button>
-                                    }
+                                    )}
                                 </div>
                                 : null}
 
                             <button
-                                className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl mt-4 w-full ${showCreate ? 'opacity-50' : ''}`}
+                                className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl mt-4 w-full }`}
                                 onClick={() => {
                                     setShowCreate(!showCreate);
                                     handleButtonClick(); // Trigger the file input click
@@ -341,20 +351,20 @@ export default function Home() {
 
                 {/* Content Part */}
 
-                { (isDropping) ? <DropFilesHere/> :              
-                
+                {(isDropping) ? <DropFilesHere /> :
+
                     (currentFragment === 0) ?
                         <SharedWithMe /> :
                         (currentFragment === 1) ?
                             <MySpace />
-                            : <SharedToPeople  />
+                            : <SharedToPeople />
                 }
             </div>
 
 
             {/* Floting parts */}
 
-            <div className={`fixed  bottom-20 right-20  overflow-hidden rounded-full rotate-90 lg:hidden ${(currentFragment === 1)? 'block' : 'hidden'}`}>
+            <div className={`fixed  bottom-20 right-20  overflow-hidden rounded-full rotate-90 lg:hidden ${(currentFragment === 1) ? 'block' : 'hidden'}`}>
                 <MdUploadFile onClick={async () => {
                     handleButtonClick();
                 }} className='w-12 h-12 bg-[#105682] text-white p-3 -rotate-90 cursor-pointer' />
