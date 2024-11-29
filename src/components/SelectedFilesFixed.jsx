@@ -38,7 +38,7 @@ const SelectedFilesFixed = () => {
             if (!pinataResponse) {
                 setUploadingStatus(false);
                 setUploadStep(null);
-                alert('Uploading Error!');
+                alert('Transaction rejected by user!');
                 return;
             }
 
@@ -55,7 +55,7 @@ const SelectedFilesFixed = () => {
                 if (blockchainUpload) {
                     setSelectedFiles(null);
                 } else {
-                    alert('Operation rejected by User!');
+                    alert('Upload rejected by User!');
                 }
             }
 
