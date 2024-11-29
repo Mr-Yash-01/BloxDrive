@@ -11,12 +11,10 @@ export const manageUpload = async (pinata, files) => {
 
             // Check if the upload was successful and handle errors
             if (!res || !res.IpfsHash) {
-                console.log(`Error: Upload failed for file ${file.name}`);
                 continue;  // Skip to the next file if upload fails
             }
 
-            console.log("File uploaded:", file.name, res);
-
+            
             // Prepare file metadata object
             const tempFileObject = {
                 name: file.name,

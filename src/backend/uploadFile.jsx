@@ -4,8 +4,7 @@ export const uploadFile = async (pinata, file) => {
         const res = await pinata.upload.file(file);
 
         // Log the response for debugging
-        console.log("File uploaded successfully:", res);
-
+        
         // Check if the upload was successful
         if (res && res.IpfsHash) {
             return { success: true, IpfsHash: res.IpfsHash };

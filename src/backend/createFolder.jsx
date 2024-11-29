@@ -6,22 +6,17 @@ export const createFolder = async (newFolderName, contractInstance, path, accoun
             return false; // Indicate failure as the folder already exists
         }
 
-        console.log("Initiating folder creation...");
-        console.log("New folder name:", newFolderName);
+        
 
         // Initiating the transaction
         const transaction = await contractInstance.createFolder(path, newFolderName, account);
-        console.log("Transaction sent:", transaction);
-
+        
         // Wait for the transaction receipt
         const receipt = await transaction.wait();
-        console.log("Transaction receipt:", receipt);
-
+        
         if (receipt.status) {
-            console.log("Folder creation successful!");
             return true; // Transaction succeeded
         } else {
-            console.error("Transaction failed on-chain.");
             return false; // Transaction failed on-chain
         }
     } catch (error) {

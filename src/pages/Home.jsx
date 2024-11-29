@@ -286,11 +286,9 @@ export default function Home() {
                                                 setIsFolderCreating(true);
 
                                                 try {
-                                                    console.log("Creating folder...");
                                                     const res = await createFolder(newFolderName, contractInstance, path, account, folderData);
 
                                                     if (res) {
-                                                        console.log("Folder created successfully!");
                                                         const updatedData = await getFolderData(contractInstance, path, account);
                                                         setFolderData(updatedData);
                                                         setIsCreateFolderTapped(false);

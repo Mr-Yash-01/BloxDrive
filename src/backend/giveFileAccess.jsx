@@ -19,10 +19,8 @@ export async function giveFileAccess(account, toAddress, selectedFileManuplation
 
         // Check if the transaction was successful (status === 1)
         if (receipt.status === 1) {
-            console.log('File access granted successfully');
             return true;  // Return true if successful
         } else {
-            console.log('Error in giving file access. Receipt status:', receipt.status);
             return false;  // Return false if the transaction failed
         }
     } catch (error) {

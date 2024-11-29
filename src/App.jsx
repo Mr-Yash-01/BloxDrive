@@ -21,9 +21,7 @@ function App() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      console.log("Secrets fetched:", data);
-      
+      const data = await response.json();      
       
       setSecrets(data); // Store the secrets in the atom
 
