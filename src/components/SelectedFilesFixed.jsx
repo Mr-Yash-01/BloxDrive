@@ -73,7 +73,7 @@ const SelectedFilesFixed = () => {
 
     return (
         <div>
-            <div className="hidden lg:block mt-4 rounded-xl shadow-[#105682] overflow-hidden shadow-sm bg-[#131314]">
+            <div className="hidden lg:block mt-4 rounded-xl shadow-[#105682] shadow-sm bg-[#131314] max-h-[360px] overflow-auto">
                 <div className="flex px-2 bg-[#105682] items-center">
                     <ImFilesEmpty className="w-6 h-6" />
                     <h1 className="bg-[#105682] p-2 text-xl">Selected Files</h1>
@@ -81,14 +81,16 @@ const SelectedFilesFixed = () => {
                         <IoMdClose className="w-6 h-6" />
                     </button>
                 </div>
-                {selectedFiles.map((file, index) => (
-                    <div key={index} className="px-2 my-2 text-lg">
-                        <div className="flex items-center">
-                            <CiFileOn className="w-5 h-5" />
-                            <h1 className="text-lg px-2">{file.name}</h1>
+                <div className="overflow-auto">
+                    {selectedFiles.map((file, index) => (
+                        <div key={index} className="px-2 my-2 text-lg">
+                            <div className="flex items-center">
+                                <CiFileOn className="w-5 h-5" />
+                                <h1 className="text-lg px-2">{file.name}</h1>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
             <div className="flex justify-end mt-4">
                 {!uploadingStatus ? (

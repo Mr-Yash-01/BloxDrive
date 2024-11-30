@@ -29,11 +29,16 @@ const MySpace = () => {
                 e.preventDefault();
                 setIsDropping(true);
             }}
-            className={`bg-[#131314] min-h-full lg:blur-0 py-4 px-2 ml-4 h-[830px] md:h-[860px] lg:h-[910px] xl:h-[820px] lg:ml-60 overflow-hidden rounded-3xl ${(selectedFileManuplation.name) ? 'blur-sm' : ''} ${(selectedFiles) ? 'sm:blur-sm' : ''} ${(isCreateFolderTapped) ? 'sm:blur-sm' : ''} ${(deleteTaped) ? 'lg:blur-sm' : ''}`}>
-            {/* Fixed Header Section */}
-
-            {/* <div className="absolute w-full max-w-full md:ml-4 md:top-28 md:left-0 lg:top-0 lg:left-0"> */}
-                <nav className="flex justify-between items-center sticky py-6 px-6 bg-[#131314]">
+            className={`bg-[#1b1b20] lg:ml-60 overflow-hidden rounded-3xl
+            ${(selectedFileManuplation.name) ? 'blur-sm' : ''} 
+            ${(selectedFiles) ? 'sm:blur-sm' : ''} 
+            ${(isCreateFolderTapped) ? 'sm:blur-sm' : ''} 
+            ${(deleteTaped) ? 'lg:blur-sm' : ''}`}
+            >
+            {/* Wrapper Div for Padding */}
+            <div className="bg-[#131314] sticky rounded-3xl lg:p-6 h-[calc(100vh-120px)] flex flex-col">
+                {/* Fixed Header Section */}
+                <nav className="flex justify-between items-center sticky py-6 px-6 bg-[#131314] top-0 z-10">
                     {/* Navigation: Left Section */}
                     <div className="flex items-center gap-6">
                         {/* Back Button */}
@@ -73,44 +78,36 @@ const MySpace = () => {
                         </div>
                     </div>
                 </nav>
-            {/* </div> */}
 
-
-
-
-            {/* Scrollable Content Section */}
-            <div className='px-2  lg:px-8 pb-6 overflow-y-auto max-h-[calc(100vh-120px)]'>
-                {
-                    (folderData.name) ? (
-                        <>
-                            {
-                                folderData.files && folderData.files.length > 0 ? (
+                {/* Scrollable Content Section */}
+                <div className="flex-1 overflow-y-auto mt-4">
+                    {
+                        folderData.name ? (
+                            <>
+                                {folderData.files && folderData.files.length > 0 ? (
                                     <FileCompo data={folderData.files} />
                                 ) : (
                                     <NoFiles />
-                                )
-                            }
-                            {
-                                folderData.folders && folderData.folders.length > 0 ? (
+                                )}
+                                {folderData.folders && folderData.folders.length > 0 ? (
                                     <FolderCompo data={folderData.folders} />
                                 ) : (
                                     <NoFolders />
-                                )
-                            }
-                            <div className='h-60'>
-
+                                )}
+                            </>
+                        ) : (
+                            <div className="flex justify-center items-center">
+                                <span className="loader"></span>
                             </div>
-                        </>
-                    ) : (
-                        <div className='flex justify-center items-center'>
-                            <span className='loader'></span>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                    <div className='h-32'></div>
+                </div>
             </div>
-
         </div>
     );
+
+
 };
 
 export default MySpace;

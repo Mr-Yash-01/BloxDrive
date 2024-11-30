@@ -213,7 +213,7 @@ export default function Home() {
     };
 
     return (
-        <div className="flex flex-col bg-[#1b1b20] text-[#e3e3e3] min-w-full max-w-full min-h-full ">
+        <div className="flex flex-col bg-[#1b1b20] text-[#e3e3e3] min-w-full  min-h-full ">
             {/* Header Section */}
             <div className='flex flex-col justify-between p-4 gap-4 bg-[#1b1b20] sticky top-0 z-10 md:flex-row md:gap-32 lg:justify-between'>
                 <div className='flex flex-row items-center justify-between md:flex-col'>
@@ -235,83 +235,88 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className=' bg-[#1b1b20] pr-4'>
-
+            <div className="max-h-screen w-screen bg-[#1b1b20] overflow-hidden pr-4">
                 <aside
                     id="default-sidebar"
-                    className="fixed bottom-0 overflow-y-auto max-h-[900px] lg:bottom-auto lg:left-0 lg:z-40 w-full lg:w-56 bg-[#1b1b20] h-16 lg:h-screen transition-transform sm:translate-x-0"
+                    className="fixed bottom-0 lg:bottom-auto lg:left-0 lg:z-40 w-full lg:w-56 bg-[#1b1b20] h-[100vh] lg:h-screen overflow-hidden transition-transform sm:translate-x-0"
                     aria-label="Sidebar"
                 >
-                    <div className="h-full  lg:h-auto px-3 py-4 lg:overflow-y-auto lg:flex lg:flex-col lg:items-start flex justify-around items-center">
+                    <div className="h-full lg:h-auto px-3 py-4 lg:overflow-y-auto lg:flex lg:flex-col lg:items-start flex justify-around items-center">
 
+                        {/* Fragments or Sidebar Content */}
                         <Fragments />
 
                         {/* Divider and Create Button - Visible on lg screens */}
                         <div className="hidden lg:block w-full">
                             <hr className="opacity-20 mt-4" />
 
-                            <button className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl  mt-4 w-full`}
-                                onClick={() => setIsCreateFolderTapped(true)} >
+                            <button
+                                className="flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center hover:bg-[#105682] border-2 border-[#105682] rounded-xl mt-4 w-full"
+                                onClick={() => setIsCreateFolderTapped(true)}
+                            >
                                 <MdOutlineCreateNewFolder className="w-6 h-6" />
                                 <h1 className='text-base'>Create Folder</h1>
                             </button>
 
-                            {(isCreateFolderTapped) ?
-                                <div className='hidden lg:block'>
-                                    <div className=' mt-4 rounded-xl shadow-[#105682] overflow-hidden shadow-sm bg-[#131314]'>
-                                        <div className='flex px-2  bg-[#105682] items-center'>
-                                            <ImFilesEmpty className='w-6 h-6' />
-                                            <h1 className='bg-[#105682] p-2 text-xl'>
-                                                Folder Name
-                                            </h1>
-                                            <button onClick={() => setIsCreateFolderTapped(false)} className='items-center ml-auto '>
-                                                <IoMdClose className='w-6 h-6 ' />
+                            {/* Folder Creation Section */}
+                            {isCreateFolderTapped && (
+                                <div className="mt-4">
+                                    {/* Folder Name Input and Title Section */}
+                                    <div className="hidden lg:block rounded-xl shadow-[#105682] overflow-hidden shadow-sm bg-[#131314]">
+                                        <div className="flex px-2 bg-[#105682] items-center">
+                                            <ImFilesEmpty className="w-6 h-6" />
+                                            <h1 className="bg-[#105682] p-2 text-xl">Folder Name</h1>
+                                            <button onClick={() => setIsCreateFolderTapped(false)} className="items-center ml-auto">
+                                                <IoMdClose className="w-6 h-6" />
                                             </button>
                                         </div>
-                                        <input type='text' onChange={(e) => {
-                                            setNewFolderName(e.target.value);
-                                        }} className='bg-[#131314] focus:outline-none h-12 text-[#e3e3e3] p-2 overflow-hidden' placeholder='Folder Name' />
-
-
+                                        <input
+                                            type="text"
+                                            onChange={(e) => setNewFolderName(e.target.value)}
+                                            className="bg-[#131314] focus:outline-none h-12 text-[#e3e3e3] p-2 overflow-hidden"
+                                            placeholder="Folder Name"
+                                        />
                                     </div>
-                                    {isFolderCreating ? (
-                                        <button
-                                            className={`flex flex-row justify-self-center w-fit p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl mt-4`}
-                                        >
-                                            <span className="w-6 h-6 loader" />
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={async () => {
-                                                setIsFolderCreating(true);
 
-                                                try {
-                                                    const res = await createFolder(newFolderName, contractInstance, path, account, folderData);
-
-                                                    if (res) {
-                                                        const updatedData = await getFolderData(contractInstance, path, account);
-                                                        setFolderData(updatedData);
-                                                        setIsCreateFolderTapped(false);
-                                                    } else {
-                                                        alert("Operation rejected by user.");
+                                    {/* Folder Creation Button (With Loader or Icon) */}
+                                    <div className="flex justify-end mt-4">
+                                        {isFolderCreating ? (
+                                            <button className="flex flex-row justify-center w-fit p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl">
+                                                <span className="w-6 h-6 loader" />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={async () => {
+                                                    setIsFolderCreating(true);
+                                                    try {
+                                                        const res = await createFolder(newFolderName, contractInstance, path, account, folderData);
+                                                        if (res) {
+                                                            const updatedData = await getFolderData(contractInstance, path, account);
+                                                            setFolderData(updatedData);
+                                                            setIsCreateFolderTapped(false);
+                                                        } else {
+                                                            alert("Operation rejected by user.");
+                                                        }
+                                                    } catch (error) {
+                                                        console.error("Error during folder creation:", error);
+                                                        alert("An unexpected error occurred.");
+                                                    } finally {
+                                                        setIsFolderCreating(false);
                                                     }
-                                                } catch (error) {
-                                                    console.error("Error during folder creation:", error);
-                                                    alert("An unexpected error occurred.");
-                                                } finally {
-                                                    setIsFolderCreating(false);
-                                                }
-                                            }}
-                                            className={`flex flex-row justify-self-center w-fit p-4 shadow-black items-center shadow-md justify-items-center bg-[#105682] rounded-xl mt-4 hover:bg-[#13415e]`}
-                                        >
-                                            <IoMdAdd className="w-6 h-6" />
-                                        </button>
-                                    )}
+                                                }}
+                                                className="flex flex-row justify-center items-center shadow-md bg-[#105682] rounded-xl px-4 py-2 hover:bg-[#13415e]"
+                                            >
+                                                <IoMdAdd className="w-6 h-6" />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                                : null}
+                            )}
 
+
+                            {/* Upload Files Button */}
                             <button
-                                className={`flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center  hover:bg-[#105682] border-2 border-[#105682] rounded-xl mt-4 w-full }`}
+                                className="flex flex-row gap-2 px-4 py-4 shadow-black items-center shadow-md justify-items-center hover:bg-[#105682] border-2 border-[#105682] rounded-xl mt-4 w-full"
                                 onClick={() => {
                                     setShowCreate(!showCreate);
                                     handleButtonClick(); // Trigger the file input click
@@ -327,37 +332,30 @@ export default function Home() {
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
-                                multiple // Allows selection of multiple files
+                                multiple
                             />
 
-                            {(selectedFiles) ?
-                                <SelectedFilesFixed />
-                                : null}
+                            {/* Display Selected Files */}
+                            {selectedFiles && <SelectedFilesFixed />}
                         </div>
                     </div>
 
-
-                    {
-                        (selectedFileManuplation.name) ?
-                            <SelectedFilesManuplationFixed />
-                            : null
-                    }
-
-
+                    {/* File Manipulation Section */}
+                    {selectedFileManuplation.name && <SelectedFilesManuplationFixed />}
                 </aside>
 
-
                 {/* Content Part */}
-
-                {(isDropping) ? <DropFilesHere /> :
-
-                    (currentFragment === 0) ?
-                        <SharedWithMe /> :
-                        (currentFragment === 1) ?
-                            <MySpace />
-                            : <SharedToPeople />
-                }
+                {isDropping ? (
+                    <DropFilesHere />
+                ) : currentFragment === 0 ? (
+                    <SharedWithMe />
+                ) : currentFragment === 1 ? (
+                    <MySpace />
+                ) : (
+                    <SharedToPeople />
+                )}
             </div>
+
 
 
             {/* Floting parts */}
