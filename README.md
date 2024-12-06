@@ -1,8 +1,19 @@
-# React + Vite
+# BloxDrive: Decentralized Cloud Storage
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BloxDrive is a decentralized cloud storage system built with Web3 technologies, offering users full control over their data. It leverages Ethereum blockchain, IPFS, and Pinata to ensure secure, transparent, and scalable file storage, while utilizing React, Solidity, and Tailwind CSS for the frontend.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Decentralized File Storage**: Files are stored securely on the IPFS network, ensuring high availability and redundancy.
+- **Blockchain-backed Integrity**: Every file upload and transaction is recorded on the Ethereum blockchain, ensuring transparency and immutability.
+- **Secure File Management**: Smart contracts manage file data, giving users full control and ensuring data security.
+- **Responsive Interface**: The user interface is built using React and styled with Tailwind CSS for a modern and responsive design.
+- **Data Ownership**: Users own and control their data with complete privacy, avoiding reliance on centralized cloud storage providers.
+
+## Tech Stack
+
+- **Frontend**: React, Tailwind CSS
+- **Blockchain**: Ethereum, Solidity
+- **Storage**: IPFS, Pinata
+- **State Management**: Recoil
+- **Smart Contracts**: Solidity for handling file metadata, storage transactions, and ownership
