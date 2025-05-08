@@ -1,19 +1,37 @@
-# BloxDrive: Decentralized Cloud Storage
+# 🚀 BloxDrive: Decentralized Cloud Storage Interface
 
-BloxDrive is a decentralized cloud storage system built with Web3 technologies, offering users full control over their data. It leverages Ethereum blockchain, IPFS, and Pinata to ensure secure, transparent, and scalable file storage, while utilizing React, Solidity, and Tailwind CSS for the frontend.
+**BloxDrive** is a fully decentralized cloud storage platform powered by Web3 technologies. It gives users complete ownership and control over their files, using Ethereum blockchain, IPFS, and smart contracts — all wrapped in a sleek, modern interface built with React and Tailwind CSS.
 
-## Features
+## ✨ Features
 
-- **Decentralized File Storage**: Files are stored securely on the IPFS network, ensuring high availability and redundancy.
-- **Blockchain-backed Integrity**: Every file upload and transaction is recorded on the Ethereum blockchain, ensuring transparency and immutability.
-- **Secure File Management**: Smart contracts manage file data, giving users full control and ensuring data security.
-- **Responsive Interface**: The user interface is built using React and styled with Tailwind CSS for a modern and responsive design.
-- **Data Ownership**: Users own and control their data with complete privacy, avoiding reliance on centralized cloud storage providers.
+- 🗂️ **Decentralized File Storage**: Upload, receive, and manage files on IPFS with redundancy and availability.
+- 🔐 **MetaMask Authentication**: Seamless login and verification via Ethereum wallet (MetaMask).
+- 📜 **Blockchain-backed Integrity**: All actions are transparently recorded on the Ethereum blockchain for security and trust.
+- 🤝 **File Sharing**: Share files with other users using their Ethereum addresses.
+- 📱 **Modern Responsive UI**: Built using React and Tailwind CSS with an intuitive, clean design.
+- 📊 **Dashboard & Previews**: View file lists, previews, and metadata directly in your interface.
+- 🧠 **State Management**: Recoil is used for managing app state efficiently.
 
-## Tech Stack
+## 🧪 Tech Stack
 
-- **Frontend**: React, Tailwind CSS
-- **Blockchain**: Ethereum, Solidity
+- **Frontend**: React.js, Tailwind CSS
+- **Authentication**: MetaMask
+- **Blockchain**: Ethereum (Smart Contracts in Solidity)
 - **Storage**: IPFS, Pinata
 - **State Management**: Recoil
-- **Smart Contracts**: Solidity for handling file metadata, storage transactions, and ownership
+- **Libraries**: Ethers.js, Web3.js
+
+## 📦 Folder Structure
+
+bloxdrive-frontend/
+- ├── components/
+- ├── pages/
+- ├── utils/
+- ├── recoil/
+- └── styles/
+
+## 🚀 Getting Started
+- git clone https://github.com/Mr-Yash-01/BloxDrive.git
+- cd bloxdrive-frontend
+- npm install
+- npm run dev
